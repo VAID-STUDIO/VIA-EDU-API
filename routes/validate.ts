@@ -37,4 +37,26 @@ router.post('/validate-avatar', [
     res.json({ message: 'Avatar is valid' });
 });
 
+router.post('/validate-username', [
+    authenticateToken,
+    check('username').isString().withMessage('Username must be a string')
+], (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    res.json({ message: 'Username is valid' });
+});
+
+router.post('/validate-password', [
+    authenticateToken,
+    check('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+], (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    res.json({ message: 'Password is valid' });
+});
+
 export default router;

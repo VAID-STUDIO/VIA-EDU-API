@@ -1,19 +1,29 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 
-const studentSchema = new mongoose.Schema({
-    id: { type: String, index: true },
+const teacherSchema = new mongoose.Schema({
     name: { type: String, required: true },
     age: { type: Number, required: true },
-    grade: { type: String, required: true },
-    class: { type: String, required: true, index: true },
-    publicEmail: { 
+    specialization: { type: String, required: true },
+    workExperience: { type: Number, required: true },
+    description: { type: String, required: true },
+    email: { 
         type: String, 
         validate: {
             validator: validator.isEmail,
             message: 'Invalid email format'
         }
     },
+    phone: { 
+        type: String, 
+        validate: {
+            validator: function(v: string) {
+                return validator.isMobilePhone(v, 'any', { strictMode: true });
+            },
+            message: 'Invalid phone number format'
+        }
+    },
+    address: { type: String, required: true },
     socialNetworks: {
         type: [String],
         validate: {
@@ -29,10 +39,9 @@ const studentSchema = new mongoose.Schema({
             validator: validator.isURL,
             message: 'Invalid URL format for avatar'
         }
-    },
-    description: { type: String, required: true },
+    }
 });
 
-const Student = mongoose.model('Student', studentSchema);
+const Teacher = mongoose.model('Teacher', teacherSchema);
 
-export default Student;
+export default Teacher;

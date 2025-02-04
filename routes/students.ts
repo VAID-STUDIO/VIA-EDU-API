@@ -1,8 +1,21 @@
 import express, { Request, Response } from 'express';
 import { authenticateToken } from '../middleware/authenticateToken';
 import Student from '../models/student';
+import sanitizeHtml from 'sanitize-html';
 
 const router = express.Router();
+
+const sanitizeData = (req: Request, res: Response, next: Function) => {
+    req.body.name = sanitizeHtml(req.body.name);
+    req.body.age = sanitizeHtml(req.body.age);
+    req.body.grade = sanitizeHtml(req.body.grade);
+    req.body.class = sanitizeHtml(req.body.class);
+    req.body.publicEmail = sanitizeHtml(req.body.publicEmail);
+    req.body.socialNetworks = req.body.socialNetworks.map((url: string) => sanitizeHtml(url));
+    req.body.avatar = sanitizeHtml(req.body.avatar);
+    req.body.description = sanitizeHtml(req.body.description);
+    next();
+};
 
 router.get('/:studentId', authenticateToken, async (req: Request, res: Response) => {
     try {
